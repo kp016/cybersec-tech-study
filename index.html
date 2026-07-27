@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COIT11241 · Study Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#f3f6ee;        /* page background (off-white, warm) */
+  --cream2:#eaf0e2;
+  --paper:#ffffff;        /* cards */
+  --ink:#1b2a20;          /* main text */
+  --ink-soft:#5f7166;     /* muted */
+  --green:#2f9e6b;        /* primary */
+  --green-bright:#3bb47c;
+  --green-deep:#1f7a52;   /* headings */
+  --green-dark:#12402d;   /* sidebar base */
+  --green-dark2:#0d3122;
+  --green-soft:#e7f4ec;   /* soft fill */
+  --green-soft2:#d8ecdf;
+  --gold:#c58a2e;         /* warm accent for "due" */
+  --gold-soft:#f7edda;
+  --rose:#d0645c;         /* incorrect */
+  --rose-soft:#f8e6e4;
+  --line:#e0e8db;
+  --shadow:0 1px 2px rgba(20,60,40,.04), 0 8px 24px rgba(20,60,40,.06);
+  --shadow-sm:0 1px 3px rgba(20,60,40,.07);
+  --radius:16px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:'Inter', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background:var(--cream); color:var(--ink); line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--green-soft2);}
+#layout{display:flex; min-height:100vh;}
+
+/* ===================== SIDEBAR ===================== */
+#sidebar{
+  width:280px; flex-shrink:0; color:#dcefe1;
+  background:linear-gradient(165deg,var(--green-dark) 0%, var(--green-dark2) 100%);
+  padding:22px 16px; position:sticky; top:0; height:100vh; overflow-y:auto;
+}
+#sidebar::-webkit-scrollbar{width:8px;}
+#sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14); border-radius:8px;}
+.brand{display:flex; align-items:center; gap:11px; padding:4px 8px 2px;}
+.brand .logo{
+  width:38px;height:38px;border-radius:11px;flex-shrink:0;
+  background:linear-gradient(145deg,var(--green-bright),var(--green-deep));
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  box-shadow:0 4px 12px rgba(0,0,0,.25);
+}
+.brand h1{font-family:'Fraunces',serif; font-size:19px; margin:0; color:#fff; font-weight:600; letter-spacing:.2px;}
+.brand .tag{font-size:11px; color:#8fc3a4; margin-top:1px;}
+.side-meta{font-size:11px;color:#7fb598;padding:6px 10px 14px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:12px;}
+
+.nav-label{font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:#6ea888; margin:16px 10px 7px; font-weight:600;}
+.nav-btn{
+  display:flex; align-items:center; gap:10px; width:100%; text-align:left;
+  background:transparent; border:none; color:#cfe7d7; padding:9px 11px;
+  border-radius:11px; cursor:pointer; font-size:13.5px; font-family:inherit;
+  margin-bottom:3px; transition:background .15s, color .15s; position:relative;
+}
+.nav-btn .ic{width:20px;text-align:center;font-size:14px;opacity:.9;}
+.nav-btn .lbl{flex:1; line-height:1.3;}
+.nav-btn:hover{background:rgba(255,255,255,.07); color:#fff;}
+.nav-btn.active{background:rgba(255,255,255,.14); color:#fff; font-weight:600;}
+.nav-btn.active::before{content:"";position:absolute;left:-16px;top:8px;bottom:8px;width:4px;border-radius:0 4px 4px 0;background:var(--green-bright);}
+.nav-btn.sub{padding-left:14px; font-size:12.5px;}
+.pill{font-size:10px; padding:2px 8px; border-radius:20px; background:rgba(255,255,255,.13); color:#bfe0cc; font-weight:600; white-space:nowrap;}
+.pill.done{background:var(--green-bright); color:#0c3323;}
+
+/* ===================== MAIN ===================== */
+#main{flex:1; min-width:0;}
+#topbar{
+  position:sticky; top:0; z-index:20; background:rgba(243,246,238,.85); backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line); padding:15px 34px; display:flex; align-items:center; justify-content:space-between;
+}
+#topbar .crumb{font-size:13px; color:var(--ink-soft);}
+#topbar .crumb b{color:var(--green-deep);}
+#topbar .term-badge{font-size:11.5px; color:var(--ink-soft); background:var(--paper); border:1px solid var(--line); padding:5px 12px; border-radius:20px;}
+#content{padding:0 34px 90px; max-width:940px; margin:0 auto;}
+
+/* Hero */
+.hero{
+  margin:26px 0 22px; padding:30px 32px; border-radius:20px; position:relative; overflow:hidden;
+  background:linear-gradient(130deg,var(--green-deep),var(--green) 65%, var(--green-bright));
+  color:#fff; box-shadow:0 10px 30px rgba(31,122,82,.22);
+}
+.hero::after{content:"";position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.08);}
+.hero::before{content:"";position:absolute;right:70px;bottom:-60px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.06);}
+.hero .eyebrow{font-size:11.5px; text-transform:uppercase; letter-spacing:.14em; color:#c7ead4; font-weight:600; margin-bottom:8px;}
+.hero h2{font-family:'Fraunces',serif; font-size:29px; margin:0 0 8px; font-weight:600; line-height:1.15;}
+.hero p{margin:0; font-size:14.5px; color:#e4f4ea; max-width:640px; position:relative; z-index:1;}
+
+/* Cards */
+.card{
+  background:var(--paper); border:1px solid var(--line); border-radius:var(--radius);
+  padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow-sm);
+}
+.card.section{padding-left:24px; border-left:4px solid var(--green);}
+.card h3{
+  font-family:'Fraunces',serif; margin:0 0 4px; font-size:18px; color:var(--green-deep); font-weight:600;
+  display:flex; align-items:center; gap:9px;
+}
+.card h3 .dot{width:8px;height:8px;border-radius:50%;background:var(--green-bright);}
+.card h4{font-size:14px; color:var(--green-deep); margin:18px 0 7px; font-weight:600;}
+.card > h4:first-child{margin-top:2px;}
+.card p{margin:8px 0;}
+.card ul, .card ol{margin:8px 0 8px 4px; padding-left:20px;}
+.card li{margin-bottom:6px;}
+.muted{color:var(--ink-soft);}
+.lead{color:var(--ink-soft); font-size:13.5px; margin:-2px 0 16px;}
+
+code, .code-inline{
+  background:var(--green-soft); color:var(--green-deep); padding:1.5px 6px; border-radius:6px;
+  font-family:"SF Mono", Consolas, "Cascadia Code", monospace; font-size:12.6px; font-weight:500;
+}
+pre{
+  background:#0f2e21; border-radius:12px; padding:14px 16px; overflow-x:auto;
+  font-size:12.6px; color:#c6ead3; font-family:"SF Mono", Consolas, monospace; line-height:1.6;
+  margin:12px 0; box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
+}
+pre code{background:none; padding:0; color:inherit; font-weight:400;}
+pre .cmt{color:#6fae8b;}
+
+table.ref{width:100%; border-collapse:collapse; font-size:13px; margin:12px 0; overflow:hidden; border-radius:10px; box-shadow:0 0 0 1px var(--line);}
+table.ref th, table.ref td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line);}
+table.ref th{background:var(--green-soft); color:var(--green-deep); font-weight:600; font-size:12.5px;}
+table.ref tr:last-child td{border-bottom:none;}
+table.ref tr:nth-child(even) td{background:#fafcf8;}
+
+.terms-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+.term{background:var(--green-soft); border-radius:12px; padding:13px 15px;}
+.term b{color:var(--green-deep); display:block; font-size:13px; margin-bottom:4px; font-weight:600;}
+.term span{font-size:12.6px; color:#4b5f52;}
+@media(max-width:640px){.terms-grid{grid-template-columns:1fr;}}
+
+/* Section header row with icon chip */
+.sec-head{display:flex; align-items:center; gap:12px; margin:32px 2px 12px;}
+.sec-head .chip{
+  width:40px;height:40px;border-radius:12px;flex-shrink:0; display:flex;align-items:center;justify-content:center;font-size:19px;
+  background:var(--green-soft); color:var(--green-deep); box-shadow:inset 0 0 0 1px var(--green-soft2);
+}
+.sec-head h3{font-family:'Fraunces',serif; margin:0; font-size:19px; color:var(--ink); font-weight:600;}
+.sec-head p{margin:1px 0 0; font-size:12.5px; color:var(--ink-soft);}
+
+/* Lab checklist */
+.lab-group{margin-bottom:16px;}
+.lab-group .g-title{font-size:13.5px; font-weight:600; color:var(--green-deep); margin:14px 0 6px; display:flex; align-items:center; gap:8px;}
+.lab-group .g-title::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green);}
+.lab-step{display:flex; gap:11px; align-items:flex-start; padding:9px 12px; border-radius:10px; transition:background .12s;}
+.lab-step:hover{background:var(--cream);}
+.lab-step input[type=checkbox]{
+  appearance:none;-webkit-appearance:none;margin-top:2px;width:18px;height:18px;flex-shrink:0;
+  border:2px solid var(--green); border-radius:6px; cursor:pointer; position:relative; transition:.12s;
+}
+.lab-step input[type=checkbox]:checked{background:var(--green); border-color:var(--green);}
+.lab-step input[type=checkbox]:checked::after{content:"✓";position:absolute;color:#fff;font-size:12px;top:-1px;left:2.5px;font-weight:700;}
+.lab-step label{font-size:13.3px; cursor:pointer;}
+.lab-step.done label{color:var(--ink-soft); text-decoration:line-through;}
+
+/* Tags */
+.tag{display:inline-flex; align-items:center; gap:5px; font-size:11px; padding:4px 11px; border-radius:20px; font-weight:600; letter-spacing:.02em;}
+.tag.theory{background:var(--green-soft); color:var(--green-deep);}
+.tag.lab{background:#e5f0f6; color:#2f6d94;}
+.tag.slide{background:var(--gold-soft); color:var(--gold);}
+.tag.due{background:var(--gold-soft); color:var(--gold);}
+
+/* Progress */
+.progress-bar{height:9px; background:var(--cream2); border-radius:8px; overflow:hidden; margin:10px 0 4px;}
+.progress-bar > div{height:100%; background:linear-gradient(90deg,var(--green),var(--green-bright)); border-radius:8px; transition:width .4s ease;}
+.ring-wrap{display:flex; align-items:center; gap:22px; flex-wrap:wrap;}
+.ring{position:relative; width:120px; height:120px;}
+.ring svg{transform:rotate(-90deg);}
+.ring .val{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+.ring .val b{font-family:'Fraunces',serif; font-size:26px; color:var(--green-deep); line-height:1;}
+.ring .val span{font-size:10.5px; color:var(--ink-soft); margin-top:2px;}
+
+/* Quiz */
+.quiz{margin-top:4px;}
+.quiz-q{margin-bottom:16px; padding:16px 18px; border:1px solid var(--line); border-radius:14px; background:#fbfdfa;}
+.quiz-q .qtext{font-weight:600; margin:0 0 12px; font-size:14px; display:flex; gap:9px;}
+.quiz-q .qnum{color:#fff; background:var(--green); min-width:22px; height:22px; border-radius:7px; display:inline-flex; align-items:center; justify-content:center; font-size:11.5px; flex-shrink:0; margin-top:1px;}
+.qopt{display:flex; align-items:flex-start; gap:10px; padding:9px 13px; border-radius:10px; margin-bottom:7px; cursor:pointer; background:var(--paper); border:1.5px solid var(--line); transition:.12s; font-size:13.3px;}
+.qopt:hover{border-color:var(--green-soft2); background:var(--green-soft);}
+.qopt input{margin-top:3px; accent-color:var(--green);}
+.qopt.correct{background:var(--green-soft); border-color:var(--green);}
+.qopt.correct::after{content:"✓ correct"; margin-left:auto; font-size:11px; color:var(--green-deep); font-weight:600; white-space:nowrap;}
+.qopt.incorrect{background:var(--rose-soft); border-color:var(--rose);}
+.qopt.incorrect::after{content:"your answer"; margin-left:auto; font-size:11px; color:var(--rose); font-weight:600; white-space:nowrap;}
+.explain{margin-top:10px; font-size:12.6px; color:#4b5f52; background:var(--green-soft); border-radius:9px; padding:10px 13px; display:none;}
+.explain.show{display:block;}
+.explain b{color:var(--green-deep);}
+
+.btn{
+  background:var(--green); color:#fff; border:none; padding:11px 22px; border-radius:11px;
+  font-size:13.5px; font-weight:600; cursor:pointer; font-family:inherit; transition:.15s; box-shadow:0 4px 12px rgba(47,158,107,.24);
+}
+.btn:hover{background:var(--green-deep); transform:translateY(-1px);}
+.btn.secondary{background:var(--paper); color:var(--green-deep); border:1.5px solid var(--line); box-shadow:none;}
+.btn.secondary:hover{background:var(--cream); border-color:var(--green-soft2);}
+.btn-row{display:flex; gap:10px; align-items:center; margin-top:14px; flex-wrap:wrap;}
+.score-badge{font-size:14px; font-weight:700; color:var(--green-deep); background:var(--green-soft); padding:8px 16px; border-radius:11px; display:none;}
+.score-badge.show{display:inline-block;}
+
+.vm-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:13px; margin:14px 0;}
+.vm-box{background:var(--green-soft); border-radius:13px; padding:14px 16px; font-size:12.5px; border:1px solid var(--green-soft2);}
+.vm-box .name{font-family:'Fraunces',serif; color:var(--green-deep); font-size:15px; font-weight:600; margin-bottom:2px;}
+.vm-box .role{color:var(--ink-soft); font-size:11.5px; margin-bottom:8px;}
+.vm-box .kv{font-size:12px; margin:2px 0;}
+
+hr.sep{border:none; border-top:1px solid var(--line); margin:20px 0;}
+a{color:var(--green-deep); text-decoration:none; border-bottom:1px solid var(--green-soft2);}
+a:hover{border-color:var(--green);}
+footer.note{margin-top:36px; font-size:11.5px; color:var(--ink-soft); text-align:center; padding-top:20px; border-top:1px solid var(--line);}
+
+.week-chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;}
+.wchip{background:var(--paper); border:1px solid var(--line); border-radius:11px; padding:11px 14px; font-size:12.5px; flex:1; min-width:150px; box-shadow:var(--shadow-sm);}
+.wchip b{color:var(--green-deep); display:block; font-size:12.5px;}
+.wchip span{color:var(--ink-soft); font-size:11.5px;}
+</style>
+</head>
+<body>
+<div id="layout">
+  <nav id="sidebar"></nav>
+  <div id="main">
+    <div id="topbar">
+      <div class="crumb" id="crumb"></div>
+      <div class="term-badge">COIT11241 · HT2 2026</div>
+    </div>
+    <div id="content"></div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   COIT11241 Cybersecurity Technologies — Study Hub
+   Content is data-driven. To add Week 7+:
+     - add an object to WEEKS (copy an existing one)
+     - add a TESTS entry after every 2nd week
+   Each week can carry: readings, theory[], keyTerms[], labs[],
+   slideQuiz[] (questions taken straight from that week's slides).
+   Progress + quiz bests persist via localStorage.
+   ========================================================= */
+
+const VM_TABLE = [
+  {name:"Greenbone", role:"Vulnerability scanner", ip:"192.168.56.2", fwd:"host 2443 → 443", cred:"admin / admin"},
+  {name:"Kali", role:"Attacker box", ip:"192.168.56.34", fwd:"—", cred:"kali / kali"},
+  {name:"Metasploitable2", role:"Victim (deliberately vulnerable)", ip:"192.168.56.35", fwd:"host 35080 → 80", cred:"msfadmin / msfadmin"},
+  {name:"Win8 / DC", role:"PowerShell / domain controller", ip:"192.168.56.50", fwd:"—", cred:"vagrant / vagrant"},
+];
+function vmGridHtml(){
+  return `<div class="vm-grid">${VM_TABLE.map(v=>`
+    <div class="vm-box"><div class="name">${v.name}</div><div class="role">${v.role}</div>
+      <div class="kv">IP&nbsp; <code>${v.ip}</code></div>
+      <div class="kv">Fwd&nbsp; ${v.fwd}</div>
+      <div class="kv">Login&nbsp; <code>${v.cred}</code></div>
+    </div>`).join("")}</div>`;
+}
+
+const WEEKS = [
+// ============================================ WEEK 1
+{
+  id:1, title:"Systems Approach to Cybersecurity",
+  blurb:"Foundations — what cybersecurity covers, the CIA(AAAN) goals, McCumber's Cube, STRIDE-LM, and getting VirtualBox running.",
+  readings:["Lecture slides: Wk1 Cyber Security Technologies", "Foundational / lecture-driven week (no set textbook chapter)"],
+  theory:[
+    {h:"What is Cybersecurity?", html:`
+      <p>Cybersecurity ≈ reducing information security incidents and their impact. Threats come from several directions:</p>
+      <ul>
+        <li><b>Trespass</b> — physical & network intrusion (e.g. a "cleaner" with unauthorised server access)</li>
+        <li><b>People</b> — naive users with weak passwords, or who open malicious emails</li>
+        <li><b>DevOps</b> — buggy code & misconfigured servers create weaknesses attackers exploit</li>
+        <li><b>Hardware failure</b> — a failing hard drive, or unreadable legacy media</li>
+      </ul>
+      <p>Scope covers every <b>system component</b>: network, hardware, software, people, processes and information.</p>
+      <h4>Simplified attack lifecycle</h4>
+      <table class="ref"><tr><th>Stage</th><th>Example</th></tr>
+      <tr><td>Threat</td><td>Evil Eve (the threat actor)</td></tr>
+      <tr><td>Vulnerability</td><td>Alice's misplaced trust</td></tr>
+      <tr><td>Incident</td><td>Alice opens a phishing email</td></tr>
+      <tr><td>Impact</td><td>Alice's files are encrypted</td></tr></table>`},
+    {h:"CIA → CIAAAN", html:`
+      <p>The classic <b>CIA triad</b> is expanded in this unit to <b>CIAAAN</b>:</p>
+      <table class="ref"><tr><th>Goal</th><th>Meaning</th><th>Example breach</th></tr>
+      <tr><td>Confidentiality</td><td>Only authorised parties can read data</td><td>Packet-sniff a password during a browser sync</td></tr>
+      <tr><td>Integrity</td><td>Data isn't improperly modified</td><td>Disk corruption alters a bank balance</td></tr>
+      <tr><td>Availability</td><td>Service accessible when needed</td><td>DDoS / power loss stops a server</td></tr>
+      <tr><td>Authenticity</td><td>A party/data is who/what it claims</td><td>Phishing email impersonating a bank</td></tr>
+      <tr><td>Authorisation</td><td>A party only does what it's permitted</td><td>SQL injection lets a TA 'become' you</td></tr>
+      <tr><td>Non-repudiation</td><td>A party can't deny an action</td><td>TA denies opening a card in your name</td></tr></table>`},
+    {h:"Data States", html:`
+      <p>Find the riskiest data by its <b>state</b> — described by three features:</p>
+      <ul>
+        <li><b>Location</b> — more environments (cloud) = bigger attack surface; endpoints (PCs, mobiles) are least protected yet hold valuable data</li>
+        <li><b>Type</b> — Storage &lt; Processing &lt; <b>Transit (most vulnerable)</b></li>
+        <li><b>Classification</b> — public, proprietary, confidential — classify everything</li>
+      </ul>`},
+    {h:"McCumber's Cube", html:`
+      <p>McCumber's Cube ≈ <b>Goals × Information States × Security Measures</b>. A checklist: for each goal, consider info in <i>storage / transit / processing</i>, addressed through <i>technology / people / process</i> (Tech = HW + SW + NW).</p>
+      <p><b>Example</b> — confidentiality of a stored patient database: <i>Technology</i> = choose best encryption; <i>People</i> = train staff to use it; <i>Process</i> = policy for handling unencrypted data.</p>`},
+    {h:"STRIDE-LM", html:`
+      <p>STRIDE-LM lists breaches from the <b>attacker's</b> side — the mirror of CIAAAN:</p>
+      <table class="ref"><tr><th>Letter</th><th>Breach</th><th>Mirrors</th></tr>
+      <tr><td>S</td><td>Spoofing</td><td>Authenticity</td></tr>
+      <tr><td>T</td><td>Tampering</td><td>Integrity</td></tr>
+      <tr><td>R</td><td>Repudiation</td><td>Non-repudiation</td></tr>
+      <tr><td>I</td><td>Information disclosure</td><td>Confidentiality</td></tr>
+      <tr><td>D</td><td>Denial of Service</td><td>Availability</td></tr>
+      <tr><td>E</td><td>Elevation of privilege</td><td>Authorisation</td></tr>
+      <tr><td>LM</td><td>Lateral Movement</td><td>(spreading through an environment)</td></tr></table>`},
+    {h:"VirtualBox: Host, Guest & Networking", html:`
+      <p><b>Host</b> = your physical PC. <b>Guest</b> = the VM's OS.</p>
+      <ul>
+        <li><b>NAT (Adapter 1)</b> — guest reaches the internet, sharing the host IP (guest gets e.g. <code>10.0.2.15/24</code>)</li>
+        <li><b>Internal Network (Adapter 2)</b> — guest-to-guest only; all unit VMs use name <code>192.168.56.0/24</code> ("the name isn't magic")</li>
+        <li><b>Port forwarding</b> — mail-redirect for TCP/UDP: host port → guest port, so host browser can reach guest services</li>
+        <li><b>Shared folders</b> — move files host↔guest without storing them in the guest; use Auto-mount</li>
+      </ul>
+      <p class="muted">Treat VMs as "cattle, not pets": snapshot before risky changes; if a guest is unresponsive use Power Off, and re-import if badly broken. Release a captured mouse with the <b>Right Ctrl</b> host key.</p>
+      <h4>Prerequisites</h4>
+      <ul><li>≥12GB RAM, ≥128GB free disk (or USB3.0)</li><li>Enable Virtualisation (VT-x) in BIOS — check Task Manager → Performance → CPU</li><li>Consider disabling Hyper-V (conflicts with VirtualBox)</li></ul>`},
+  ],
+  keyTerms:[
+    {t:"CIAAAN", d:"Confidentiality, Integrity, Availability, Authenticity, Authorisation, Non-repudiation."},
+    {t:"McCumber's Cube", d:"Goals × Information States × Measures — a checklist for eliciting risks & controls."},
+    {t:"STRIDE-LM", d:"Spoofing, Tampering, Repudiation, Info disclosure, DoS, Elevation of privilege, Lateral Movement."},
+    {t:"Threat Actor (TA)", d:"The party carrying out an attack."},
+    {t:"Host / Guest", d:"Host = physical machine; Guest = OS inside a VM."},
+    {t:"NAT vs Internal Network", d:"NAT = guest→internet. Internal = guest↔guest only, isolated from host & internet."},
+  ],
+  slideQuiz:[
+    {q:"What are the three main goals of cybersecurity (the base triad the unit expands on)?", opts:["Confidentiality, Integrity, Availability","Prevention, Detection, Response","People, Process, Technology","Identify, Protect, Recover"], a:0, ex:"The CIA triad — expanded in this unit to CIAAAN with Authenticity, Authorisation and Non-repudiation."},
+    {q:"Which three features define a 'data state'?", opts:["Size, owner, age","Location, Type, Classification","Encrypted, hashed, signed","Local, cloud, hybrid"], a:1, ex:"Slide 13: data state = Location, Type (storage/processing/transit), and Classification."},
+    {q:"Which data type is the MOST vulnerable?", opts:["Data in storage","Data in processing","Data in transit","All equal"], a:2, ex:"Storage < Processing < Transit — data in transit is the most exposed."},
+    {q:"McCumber's Cube is the product of which three dimensions?", opts:["Threat × Vuln × Impact","Goals × Information States × Security Measures","People × Process × Tech","CIA × STRIDE × NIST"], a:1, ex:"Goals (CIAAAN) × Info states (storage/transit/processing) × Measures (tech/people/process)."},
+    {q:"In STRIDE-LM, which letter maps to a breach of Availability?", opts:["S — Spoofing","D — Denial of Service","E — Elevation of privilege","T — Tampering"], a:1, ex:"Denial of Service attacks availability."},
+    {q:"Which VirtualBox adapter type lets a guest VM reach the internet?", opts:["Internal Network","Host-only","NAT","Bridged-only"], a:2, ex:"NAT gives the guest internet access via the host's IP."},
+    {q:"All unit VMs share which Internal Network name?", opts:["10.0.2.0/24","192.168.1.0/24","192.168.56.0/24","172.16.0.0/16"], a:2, ex:"Adapter 2 → Internal Network named 192.168.56.0/24 on every VM."},
+    {q:"Which key releases a mouse captured by a VM's GUI?", opts:["Left Ctrl","Right Ctrl (host key)","Esc","Alt+Tab"], a:1, ex:"The Right Ctrl host key releases the mouse (Left ⌘ on Mac)."},
+    {q:"What is the correct order of the simplified attack lifecycle?", opts:["Vuln → Threat → Impact → Incident","Threat → Vulnerability → Incident → Impact","Incident → Threat → Impact → Vuln","Impact → Incident → Vuln → Threat"], a:1, ex:"Threat (Evil Eve) → Vulnerability (trust) → Incident (opens phishing) → Impact (files encrypted)."},
+    {q:"Before making a risky change to a VM, best practice is to…", opts:["Delete the VM","Take a snapshot","Disable NAT","Clear the ARP cache"], a:1, ex:"Snapshot first — VMs are 'cattle not pets', so you can revert or re-import."},
+  ],
+  labs:[
+    {h:"Import the Windows VM into VirtualBox", items:["Install VirtualBox 7 (labs have it; else choco/winget/direct download)","Download the Windows .ova from the unit site","File > Import Appliance; set Machine Base Folder with ≥2× free space","Checksum the image if you hit error 0x80070057"]},
+    {h:"Backdoors & Breaches — 'JoJo' scenario (10 min)", items:["JoJo's username showed as \"JoJo_\", then logged in fine after restart — how was she compromised & how did the attacker persist?","Pick a detection procedure each round: Firewall log analysis / Permissions audit / Network threat hunting / Server analysis","Select card, roll dice, repeat until compromise + persistence uncovered"]},
+    {h:"Network & concept exercises", items:["Draw the network: host HostOnly 192.168.56.1/24 + physical NIC 136.1.5.87/24; ReactOS guest NIC1 static 192.168.56.37, NIC2 NAT 10.0.2.0/24 with DHCP","State the 3 goals of cybersecurity and the 3 data-state features","McCumber Cube: elicit risks/measures for a patient DB (confidentiality × storage × tech/process/people)"]},
+    {h:"VirtualBox networking", items:["Enable VT-x in BIOS; consider disabling Hyper-V","Adapter 1 → NAT","Adapter 2 → Internal Network, name 192.168.56.0/24 (match on all VMs)","Set up a shared folder + auto-mount"]},
+  ],
+},
+// ============================================ WEEK 2
+{
+  id:2, title:"PowerShell Fundamentals",
+  blurb:"Variables, arrays, conditionals, loops, the object pipeline, and PowerShell networking & event cmdlets.",
+  readings:["Hassell (2017) Ch.6 — Filtering & Limiting (Where-Object)","Sukhija (2021) Ch.1 — PowerShell Basics (optional)"],
+  theory:[
+    {h:"Variables, Arrays & Types", html:`
+      <pre>$a = "1"
+$b = "Vikas"
+Write-host $b -ForegroundColor Green
+$b = "A","B","C"        <span class="cmt"># implicit array</span>
+$c = @("s1","s2")       <span class="cmt"># explicit array</span>
+$d = @()                <span class="cmt"># empty/dynamic array</span>
+[int]$a = "10"          <span class="cmt"># explicit type</span></pre>
+      <p>Types: <code>[string]</code>, <code>[char]</code>, <code>[int]</code>, <code>[array]</code>.</p>`},
+    {h:"Conditionals & Operators", html:`
+      <pre>if ($a -gt 9) { "big" } else { "small" }</pre>
+      <table class="ref"><tr><th>Op</th><th>Meaning</th></tr>
+      <tr><td><code>-eq</code> / <code>-ne</code></td><td>equal / not equal</td></tr>
+      <tr><td><code>-gt</code> / <code>-ge</code></td><td>greater / or equal</td></tr>
+      <tr><td><code>-lt</code> / <code>-le</code></td><td>less / or equal</td></tr>
+      <tr><td><code>-like</code></td><td>wildcard match</td></tr>
+      <tr><td><code>-match</code></td><td>regex match</td></tr></table>
+      <p>Logical: <code>-and</code>, <code>-or</code>, <code>-not</code> / <code>!</code></p>`},
+    {h:"Loops & Functions", html:`
+      <pre>foreach ($i in $x) { ... }         <span class="cmt"># classic</span>
+$x | foreach-object { $_ }          <span class="cmt"># pipe form, uses $_</span>
+for ($i=1; $i -le 5; $i++) { ... }
+Function Add ($a,$b) { $a + $b }
+Add 5 6</pre>`},
+    {h:"The Object Pipeline", html:`
+      <p>PowerShell pipes <b>objects</b>, not text. <code>ls</code> emits a FileInfo/DirectoryInfo object per entry, each with properties (Name, Length, LastWriteTime) and methods (e.g. <code>MoveTo</code>).</p>
+      <pre>ls | Get-Member                 <span class="cmt"># properties & methods</span>
+(ls).Name                        <span class="cmt"># dot operator, per object</span>
+ls | Where Name -like "hello.*"
+ls | Where Length -ge 5
+ls | Select -first 1
+ls | Select Mode, Name -first 1  <span class="cmt"># pick/reorder columns</span>
+$ext = ls hello.*; $ext.Extension</pre>
+      <p class="muted"><code>$_</code> = "the current object" inside Where-Object / ForEach-Object.</p>`},
+    {h:"Common Shell Commands", html:`
+      <table class="ref"><tr><th>Command</th><th>Real cmdlet</th><th>Purpose</th></tr>
+      <tr><td><code>echo "x" &gt; f</code></td><td>Write-Output + &gt;</td><td>write to file</td></tr>
+      <tr><td><code>cat</code></td><td>Get-Content</td><td>show file</td></tr>
+      <tr><td><code>pwd</code></td><td>Get-Location</td><td>working dir</td></tr>
+      <tr><td><code>ls</code></td><td>Get-ChildItem</td><td>list entries</td></tr>
+      <tr><td><code>cp</code>/<code>mv</code></td><td>Copy-Item/Move-Item</td><td>copy/move</td></tr>
+      <tr><td><code>ps</code></td><td>Get-Process</td><td>list processes</td></tr></table>`},
+    {h:"Networking Cmdlets", html:`
+      <table class="ref"><tr><th>Task</th><th>Cmdlet</th><th>Deprecated</th></tr>
+      <tr><td>MAC & link status</td><td><code>Get-NetAdapter</code></td><td>ip link</td></tr>
+      <tr><td>IP address</td><td><code>Get-NetIPAddress</code></td><td>ipconfig</td></tr>
+      <tr><td>ARP cache / neighbours</td><td><code>Get-NetNeighbor</code></td><td>arp</td></tr>
+      <tr><td>Gateway & DNS server</td><td><code>Get-NetIPConfiguration</code></td><td>—</td></tr>
+      <tr><td>Test connection</td><td><code>Test-NetConnection</code> (tnc)</td><td>ping</td></tr>
+      <tr><td>Resolve DNS → IP</td><td><code>Resolve-DnsName</code></td><td>nslookup</td></tr>
+      <tr><td>TCP connections</td><td><code>Get-NetTCPConnection</code></td><td>netstat</td></tr></table>
+      <pre>Get-NetTCPConnection | where RemotePort -eq 443   <span class="cmt"># 443 = HTTPS</span></pre>`},
+    {h:"Events, Sysmon & Processes", html:`
+      <pre>Get-WinEvent system | Out-GridView
+(get-winevent *sysmon* | where id -eq 22 | select -first 1).message  <span class="cmt"># DNS query</span>
+ps "*calc*" | Stop-Process</pre>
+      <table class="ref"><tr><th>Log</th><th>Id</th><th>Meaning</th></tr>
+      <tr><td>Security</td><td>4624 / 4625</td><td>Logon / Failed logon</td></tr>
+      <tr><td>Sysmon</td><td>1 / 3 / 11</td><td>Process created / Network conn / File create</td></tr>
+      <tr><td>Sysmon</td><td>22</td><td>DNS query</td></tr></table>`},
+  ],
+  keyTerms:[
+    {t:"Pipeline ( | )", d:"Passes a stream of .NET objects between cmdlets."},
+    {t:"$_", d:"'The current object' inside Where-Object / ForEach-Object."},
+    {t:"Verb-Noun", d:"Cmdlet naming, e.g. Get-Process, Stop-Process."},
+    {t:"Get-Member", d:"Lists the properties & methods of piped objects."},
+    {t:"Sysmon", d:"Windows extension logging extra, detailed security events."},
+  ],
+  slideQuiz:[
+    {q:"What is TCP port 443 used for?", opts:["FTP","SSH","HTTPS","DNS"], a:2, ex:"Slide: 'What is TCP 443 for? HTTPS'."},
+    {q:"Using Get-Member, what is the name of the method used to move files?", opts:["Move()","MoveTo","Relocate","Transfer()"], a:1, ex:"Slide answer: MoveTo (on System.IO.FileInfo)."},
+    {q:"Which cmdlet shows the ARP (neighbour) cache?", opts:["Get-NetAdapter","Get-NetNeighbor","Get-NetRoute","Resolve-DnsName"], a:1, ex:"Get-NetNeighbor displays the ARP cache of neighbouring devices."},
+    {q:"Which cmdlet resolves a DNS name to an IP address?", opts:["Test-NetConnection","Get-NetIPAddress","Resolve-DnsName","Get-DnsClient"], a:2, ex:"Resolve-DnsName replaces nslookup/dig."},
+    {q:"What does <code>$_</code> refer to inside a Where-Object block?", opts:["The last error","The current object in the pipeline","The script path","A random value"], a:1, ex:"$_ is shorthand for the current pipeline object."},
+    {q:"Which operator means 'greater than or equal to'?", opts:["-gt","-ge","-eq","-le"], a:1, ex:"-ge = greater-or-equal; -gt is strictly greater."},
+    {q:"To list files smaller than 20 bytes, which completes <code>ls | Where ___</code>?", opts:["Length -lt 20","Size &lt; 20","Length -gt 20","Bytes -le 20"], a:0, ex:"ls | Where Length -lt 20."},
+    {q:"A Sysmon event with Id 22 records what?", opts:["Process created","File created","DNS query","Registry change"], a:2, ex:"Sysmon 22 = DNS query (1=process, 3=network, 11=file create)."},
+    {q:"Which command kills all Calculator processes?", opts:["ps \"*calc*\" | Stop-Process","kill calc","Remove-Process calc","calc -stop"], a:0, ex:"ps (Get-Process) piped into Stop-Process."},
+    {q:"<code>cat</code> is an alias for which cmdlet?", opts:["Get-ChildItem","Get-Content","Get-Location","Write-Output"], a:1, ex:"cat = Get-Content; ls = Get-ChildItem; pwd = Get-Location."},
+    {q:"A Security log event Id 4625 indicates what?", opts:["Successful logon","Failed logon","Password change","Log cleared"], a:1, ex:"4624 = logon, 4625 = failed logon."},
+  ],
+  labs:[
+    {h:"Backdoors & Breaches — 'Kim Kardashian' (10 min)", items:["ScreenConnect popup; AV keeps stopping; disk/network high; strange OneDrive account","New procedure this week: Endpoint analysis","Also available: Firewall log analysis, Permissions audit, Network threat hunting, Server analysis"]},
+    {h:"PowerShell networking (via anydesk.cqu.edu.au)", items:["Use Get-NetIPAddress, Get-NetAdapter, Test-NetConnection, Get-Member, ls, where, select","Only PowerShell v5 is installed — run 'powershell' (or ISE), not 'pwsh'"]},
+    {h:"Attribute selection & filtering", items:["Create hello.txt with echo + >","Use ls + dot operator to show its LastWriteTime","Filter with Where-Object + Select-Object for hello.txt only","Use Get-Member to find the drive property, then output that drive's free space"]},
+  ],
+},
+// ============================================ WEEK 3
+{
+  id:3, title:"Prioritising Controls (Frameworks)",
+  blurb:"Controls vs frameworks, Essential 8, CIS Controls v8, NIST CSF, plus Windows Firewall, registry & CIM exploration.",
+  readings:["CIS Controls v8 — read at least pages 8–19 (Controls 1–4)"],
+  theory:[
+    {h:"Controls vs Frameworks", html:`
+      <p><b>Controls</b> = cybersecurity requirements ("automate backups", "use a DNS filter"). Prioritising them alone is hard (Sony once shipped rootkit CDs, prioritising DRM over customers' data integrity). <b>Frameworks</b> curate & prioritise controls.</p>
+      <ul><li><b>Comprehensive</b> (can overwhelm): NIST CSF, NIST SP 800</li><li><b>Prioritised</b> (best reward for least effort): Essential 8, CIS Controls</li></ul>`},
+    {h:"ACSC Essential Eight", html:`
+      <ol><li>Application control</li><li>Patch applications</li><li>Restrict MS Office macros</li><li>User application hardening</li><li>Restrict admin privileges</li><li>Patch operating systems</li><li>Multi-factor authentication (MFA)</li><li>Regular backups</li></ol>`},
+    {h:"CIS Controls v8 (18 controls)", html:`
+      <p>CIS ≈ Essential 8 + more; the first 7 map well to E8 (E8.1 App control ↔ CIS 2).</p>
+      <table class="ref"><tr><th>#</th><th>Control</th><th>#</th><th>Control</th></tr>
+      <tr><td>1</td><td>Inventory of Enterprise Assets</td><td>10</td><td>Malware Defenses</td></tr>
+      <tr><td>2</td><td>Inventory of Software Assets</td><td>11</td><td>Data Recovery</td></tr>
+      <tr><td>3</td><td>Data Protection</td><td>12</td><td>Network Infrastructure Mgmt</td></tr>
+      <tr><td>4</td><td>Secure Configuration</td><td>13</td><td>Network Monitoring & Defense</td></tr>
+      <tr><td>5</td><td>Account Management</td><td>14</td><td>Security Awareness Training</td></tr>
+      <tr><td>6</td><td>Access Control Mgmt</td><td>15</td><td>Service Provider Mgmt</td></tr>
+      <tr><td>7</td><td>Continuous Vuln Mgmt</td><td>16</td><td>Application Software Security</td></tr>
+      <tr><td>8</td><td>Audit Log Management</td><td>17</td><td>Incident Response Mgmt</td></tr>
+      <tr><td>9</td><td>Email & Browser Protections</td><td>18</td><td>Penetration Testing</td></tr></table>
+      <p><b>CIM</b> (Common Information Model) is the industry standard for device info: <code>Get-CimInstance CIM_ComputerSystem</code> (avoid deprecated WMI). Safeguard 9.2 = DNS filtering.</p>`},
+    {h:"NIST Cybersecurity Framework", html:`
+      <p>Technology-agnostic, organised around defender processes:</p>
+      <table class="ref"><tr><th>Function</th><th>Example</th></tr>
+      <tr><td>Identify</td><td>Understand risk to assets</td></tr>
+      <tr><td>Protect</td><td>Install a firewall</td></tr>
+      <tr><td>Detect</td><td>IDS</td></tr>
+      <tr><td>Respond</td><td>Turn off router, inform staff</td></tr>
+      <tr><td>Recover</td><td>Restore from backup</td></tr></table>`},
+    {h:"Backups — the 3-2-1 rule", html:`<p>3 copies, 2 different media, 1 offsite. Always <b>test restores</b> — "no-one cares if you can back up, only if you can restore." Protect backups with encryption, air gaps, immutability.</p>`},
+    {h:"Registry, Services & File Hashes", html:`
+      <pre>Get-ItemProperty "...\\FirewallPolicy\\PublicProfile"  <span class="cmt"># EnableFirewall 0=off 1=on</span>
+(Get-Service | Where DisplayName -like "*Firewall*").Status
+Get-FileHash &lt;path&gt;   <span class="cmt"># SHA256, detect tampering</span>
+Get-CimInstance Win32_GroupUser | where GroupComponent -like "*Admin*"</pre>`},
+  ],
+  keyTerms:[
+    {t:"Control", d:"A specific cybersecurity requirement (e.g. 'automate backups')."},
+    {t:"Framework", d:"A curated set of controls (Essential 8, CIS Controls, NIST CSF)."},
+    {t:"CIM", d:"Common Information Model — standard for device/software info via Get-CimInstance."},
+    {t:"Allowlist vs Blocklist", d:"Allowlist = deny by default (more secure); blocklist = allow by default."},
+    {t:"3-2-1 backup", d:"3 copies, 2 media, 1 offsite — and test your restores."},
+  ],
+  slideQuiz:[
+    {q:"How many controls are in CIS Controls v8?", opts:["8","12","18","20"], a:2, ex:"CIS v8 has 18 controls; the first 7 map to the Essential Eight."},
+    {q:"Which is one of the ACSC Essential Eight?", opts:["Deploy a WAF","Restrict Microsoft Office macros","Run Nikto weekly","Buy cyber insurance"], a:1, ex:"Restrict Office macros is E8 #3."},
+    {q:"Essential 8 'application control' (E8.1) maps most closely to which CIS control?", opts:["CIS 2 — Inventory & Control of Software","CIS 8 — Audit Logs","CIS 18 — Penetration Testing","CIS 11 — Data Recovery"], a:0, ex:"E8.1 App control ↔ CIS 2 (software inventory/allowlisting)."},
+    {q:"The five NIST CSF functions are:", opts:["Plan, Do, Check, Act, Review","Identify, Protect, Detect, Respond, Recover","Prevent, Detect, Contain, Eradicate, Recover","Scan, Patch, Monitor, Report, Audit"], a:1, ex:"Identify / Protect / Detect / Respond / Recover."},
+    {q:"What does the '3-2-1' backup rule mean?", opts:["3 copies, 2 media, 1 offsite","3 days, 2 servers, 1 admin","3 passwords, 2 factors, 1 vault","3 scans, 2 tools, 1 report"], a:0, ex:"3 copies on 2 different media with 1 offsite — and test restores."},
+    {q:"In the firewall registry key, what does EnableFirewall = 0 mean?", opts:["Firewall enabled","Firewall disabled","Logging on","Default profile"], a:1, ex:"0 = disabled, 1 = enabled."},
+    {q:"CIS Safeguard 9.2 refers to which control?", opts:["MFA","DNS filtering","Penetration testing","Data encryption"], a:1, ex:"9.2 = use DNS filtering services to block malicious domains."},
+    {q:"Which cmdlet retrieves standardised device/software info (replacing deprecated WMI)?", opts:["Get-WmiObject","Get-CimInstance","Get-Inventory","Get-Device"], a:1, ex:"Get-CimInstance uses the Common Information Model; WMI is deprecated."},
+    {q:"Which Windows Firewall event Id corresponds to a rule (hole) being added?", opts:["2004","2011","4624","104"], a:0, ex:"Firewall event 2004 = a rule added to the exception list."},
+    {q:"The two NEW detection procedures introduced in the Week 3 (BECKS) game are:", opts:["Firewall log analysis & Server analysis","UEBA & Active defense","Endpoint analysis & Permissions audit","Network threat hunting & Server analysis"], a:1, ex:"Week 3 adds User & Entity Behaviour Analysis (UEBA) and Active defense (honeypot)."},
+  ],
+  labs:[
+    {h:"Backdoors & Breaches — 'BECKS' (10 min)", items:["Jewellery store hit with a 40GB extortion countdown; admin's socials hacked; console flashes on reboot; passwords.txt seeded a honeypot alert","Investigate: initial compromise, persistence, pivoting, 40GB exfiltration","New procedures: UEBA, Active defense (honeypot)"]},
+    {h:"Demonstrate Windows Firewall (45 min, groups)", items:["Snapshot the VM first","Turn on public+private firewall; Advanced Settings > Outbound Rules","G1: block DNS (TCP 53) — test Resolve-DnsName","G2: block HTTPS (80 & 443) — test curl","G3: block ICMPv4 — test ping","G4: block DHCP — Disable/Enable-NetAdapter \"Ethernet\", re-check NICs","G5: arp -d *, block ARP, ping 10.0.2.2, explain","Undo all changes, turn firewall back off"]},
+    {h:"CIS Controls application", items:["What data to record for new software / a new router / accesses to sensitive data?","Implementation guidelines to secure an iPhone","CIS 9.2: compare phishing.testcategory.com via 1.1.1.3 vs 8.8.8.8"]},
+    {h:"Event log & CIM investigation", items:["Find the firewall log; locate event id 2004","Run ping/cmd, find matching Sysmon id=1 parent process; verify with Get-FileHash","Get-CimInstance Win32_GroupUser — list admin group members (CIS 5.4)","Get-CimInstance CIM_Display — inspect resolution"]},
+    {h:"Download VMs for Week 4+", items:["Start importing Kali, Greenbone, Metasploitable2 if bandwidth allows"]},
+  ],
+  vmNote:true,
+},
+// ============================================ WEEK 4
+{
+  id:4, title:"Cyber Threat Intelligence & MITRE ATT&CK",
+  blurb:"Attacker behaviour: ATT&CK, CAPEC, CWE, IOCs, the Pyramid of Pain, and the Emotet case study. (A1 Recon due.)",
+  readings:["Thompson (2020) Ch.3 — Threat Intelligence (ATT&CK lifecycle, STIX, Pyramid of Pain, evaluating CTI)"],
+  theory:[
+    {h:"Why CTI?", html:`<p>Cyber Threat Intelligence helps you understand a Threat Actor's motivations, tools & tactics, and predict/prevent attacks. Detecting a <i>technique</i> (phishing) hurts an attacker far more than blocking one file hash — the idea behind the Pyramid of Pain.</p>`},
+    {h:"ATT&CK vs CAPEC vs CWE", html:`
+      <table class="ref"><tr><th>Framework</th><th>Answers</th><th>Example</th></tr>
+      <tr><td><b>ATT&CK</b></td><td>Who does what (real TA behaviour)</td><td>Emotet gains access via phishing</td></tr>
+      <tr><td><b>CAPEC</b></td><td>How weaknesses are exploited (patterns)</td><td>CAPEC-407 Pretexting</td></tr>
+      <tr><td><b>CWE</b></td><td>The weakness itself</td><td>CWE-451 UI misrepresentation</td></tr></table>
+      <p class="muted">Analogy: ATT&CK techniques are object <i>instances</i>; CAPECs are the <i>class/template</i>.</p>`},
+    {h:"IOCs & the Pyramid of Pain", html:`
+      <p><b>IOCs</b> (Indicators of Compromise) include host artefacts (filenames, registry, service activity, named mutexes) and network artefacts (SMTP, user agents, domains/IPs, hashes). A named mutex like <code>McAfeeVscanBofUpdateMutex</code> can itself be an IOC.</p>
+      <p>The <b>Pyramid of Pain</b> ranks IOCs by how costly they are for a TA to change if detected — roughly, hash values → IPs → domains → host/network artifacts → tools → <b>TTPs</b> (top = most painful). Detecting TTPs is far more disruptive than blocking a hash.</p>`},
+    {h:"MITRE ATT&CK Tactics", html:`
+      <table class="ref"><tr><th>Tactic</th><th>Example</th></tr>
+      <tr><td>Initial Access</td><td>Phishing email</td></tr>
+      <tr><td>Execution</td><td>Run a payload</td></tr>
+      <tr><td>Persistence</td><td>Startup task / run key</td></tr>
+      <tr><td>Privilege Escalation</td><td>Process injection</td></tr>
+      <tr><td>Defense Evasion</td><td>Hidden files, encoded macros</td></tr>
+      <tr><td>Credential Access</td><td>Steal passwords from memory</td></tr>
+      <tr><td>Discovery</td><td>List processes, find shares</td></tr>
+      <tr><td>Lateral Movement</td><td>SMB / remote services</td></tr>
+      <tr><td>Collection</td><td>Steal emails</td></tr>
+      <tr><td>Command & Control</td><td>Hide commands in DNS</td></tr>
+      <tr><td>Exfiltration</td><td>Download data out</td></tr>
+      <tr><td>Impact</td><td>Encrypt data (ransomware)</td></tr></table>`},
+    {h:"Case Study: Emotet", html:`
+      <ul>
+        <li><b>Initial Access (T1566):</b> phishing with macro-enabled .xlsm</li>
+        <li><b>Execution (T1204.002 / T1059):</b> macro runs a malicious DLL via <code>regsvr32.exe</code> or PowerShell/cmd</li>
+        <li><b>Persistence (T1547 / T1053):</b> startup folder, scheduled task</li>
+        <li><b>Defense Evasion (T1027):</b> encodes macros to hide URLs</li>
+        <li><b>Credential Access (T1555 / T1003):</b> browser & in-memory password theft (Mimikatz)</li>
+        <li><b>Lateral Movement (T1021):</b> spreads via SMB</li>
+        <li><b>Collection (T1114):</b> steals emails</li>
+        <li><b>C2 (T1573):</b> RSA-encrypted channel</li>
+      </ul>
+      <p class="muted">Emotet: banking trojan → Malware-as-a-Service; ~$5B stolen since 2014.</p>`},
+    {h:"Atomic Red Team (ART)", html:`
+      <p>ART maps benign test scripts to ATT&CK techniques so you can safely test your defences.</p>
+      <pre>Invoke-AtomicTest T1566.001 -TestNumbers 1 -showdetails   <span class="cmt"># emulate phishing download</span>
+Invoke-AtomicTest T1057 -TestNumbers 2,3                   <span class="cmt"># process discovery</span></pre>
+      <p class="muted">ART isn't pre-installed on Win8 — copy commands from the ART website/GitHub.</p>`},
+  ],
+  keyTerms:[
+    {t:"ATT&CK", d:"MITRE base of real adversary tactics & techniques — 'who does what'."},
+    {t:"CAPEC", d:"Attack patterns — 'how' a weakness is exploited."},
+    {t:"CWE", d:"Common Weakness Enumeration — the weakness being exploited."},
+    {t:"IOC", d:"Indicator of Compromise — hash, IP, filename, mutex, event, etc."},
+    {t:"Pyramid of Pain", d:"Ranks IOCs by attacker cost-to-change; TTPs hurt most."},
+    {t:"MaaS", d:"Malware-as-a-Service — malware/botnets rented commercially."},
+  ],
+  slideQuiz:[
+    {q:"In one line, what does MITRE ATT&CK describe?", opts:["Which weaknesses exist in code","Who does what attacks (real TA behaviour)","How to price cyber insurance","A list of firewall rules"], a:1, ex:"ATT&CK ≈ 'who does what attacks' — actual adversary tactics & techniques."},
+    {q:"What does CAPEC describe?", opts:["The specific weakness","How an attack pattern exploits a weakness","A threat actor's country","A CVSS score"], a:1, ex:"CAPEC = attack patterns/templates — 'how to exploit'."},
+    {q:"Which ATT&CK tactic covers 'moving around a victim's environment'?", opts:["Discovery","Lateral Movement","Collection","Exfiltration"], a:1, ex:"Lateral Movement = moving through the environment (e.g. via SMB)."},
+    {q:"How does Emotet typically gain Initial Access?", opts:["USB drop","Phishing email with a macro-enabled attachment","Brute-forcing SSH","Supply-chain implant"], a:1, ex:"T1566 — phishing with a macro-enabled Office file (.xlsm)."},
+    {q:"On the Pyramid of Pain, detecting which indicator hurts the attacker MOST?", opts:["A file hash","An IP address","A domain name","A TTP (tactic/technique/procedure)"], a:3, ex:"TTPs sit at the top — hardest and most costly for a TA to change."},
+    {q:"Emotet spreads laterally using which protocol?", opts:["SMB","FTP","SNMP","RDP only"], a:0, ex:"T1021 — Emotet uses SMB (file sharing) for lateral movement."},
+    {q:"What is Atomic Red Team (ART) used for?", opts:["Encrypting logs","Safely emulating ATT&CK-mapped attacks to test defences","Scanning for CVEs","Managing firewall rules"], a:1, ex:"ART is a benign attack-emulation library mapped to ATT&CK techniques."},
+    {q:"A 'named mutex' used by malware is an example of what?", opts:["A CVSS vector","An Indicator of Compromise (IOC)","A NIST function","A CIS safeguard"], a:1, ex:"Named mutexes (e.g. McAfeeVscanBofUpdateMutex) are host-based IOCs."},
+    {q:"Mimikatz is used by Emotet for which ATT&CK tactic?", opts:["Initial Access","Credential Access (steal passwords from memory)","Impact","Discovery"], a:1, ex:"Mimikatz dumps credentials from memory — Credential Access (T1003)."},
+    {q:"Emotet encrypts its Command & Control traffic using…", opts:["AES-only","RSA","ROT13","No encryption"], a:1, ex:"T1573 — RSA-encrypted C2 channel."},
+  ],
+  labs:[
+    {h:"VM setup for Weeks 5–6 (A1 Recon)", items:["Kali: NAT + Internal 192.168.56.0/24, login kali/kali, static IP 192.168.56.34/24","Greenbone: import .ova, static eth1 192.168.56.2/24, admin/admin, skip subscription, port-fwd host 2443→443","Metasploitable2: verify http://localhost:35080, stop when not in use","Verify both ways: Win8 tnc/ping Kali & Greenbone; Kali/Greenbone ping Win8 (192.168.56.50)","Snapshot each as 'Provisioned' if disk allows"]},
+    {h:"Atomic Red Team group tasks (40 min)", items:["T1001 — data obfuscation (hide data in images)","T1027.013 — EICAR test file & AV response","T1056.002 — script prompts user for credentials","T1546.008 — StickyKeys backdoor (replace sethc.exe with cmd.exe)"]},
+    {h:"MITRE ATT&CK & CAPEC website", items:["Identify ATT&CK's purpose + the tactic for 'moving around the environment'","Categorise a mobile persistence technique (FakeSpy on BOOT_COMPLETED)","Find controls for phishing on attack.mitre.org","Optus scenario: pick techniques to prioritise from ATT&CK Groups","Map T1083 File & Directory Discovery to a CAPEC pattern + mitigation"]},
+    {h:"Recon artefacts", items:["Review a Passhunt report (credential-hunting scan output)","Inspect PhishingAttachment.xlsm — emulates T1566.001 (don't enable macros outside a VM)"]},
+  ],
+  vmNote:true,
+},
+// ============================================ WEEK 5
+{
+  id:5, title:"Prioritising Vulnerabilities (CVEs)",
+  blurb:"CVE / CWE / CPE / CVSS, and hands-on scanning with Greenbone, Nmap, Nikto & wafw00f.",
+  readings:["Continues Thompson (2020) Ch.4 vulnerability concepts referenced in lecture"],
+  theory:[
+    {h:"CVE, CWE, CPE — the vocabulary", html:`
+      <table class="ref"><tr><th>Term</th><th>Meaning</th></tr>
+      <tr><td><b>CWE</b></td><td>The class of weakness (e.g. CWE-1021 UI restriction)</td></tr>
+      <tr><td><b>CVE</b></td><td>A specific real-world instance (in NIST's NVD)</td></tr>
+      <tr><td><b>CPE</b></td><td>Naming scheme for affected HW/SW, e.g. <code>cpe:2.3:o:apple:iphone_os:16.2:*</code> (a=app, o=os, h=hardware)</td></tr></table>
+      <p>Example: <b>CVE-2020-9993</b> (Apple Watch URL spoofing) is an instance of <b>CWE-451</b> (UI misrepresentation). NVD maps each CVE to affected CPEs.</p>`},
+    {h:"CVSS — scoring severity (0–10)", html:`
+      <table class="ref"><tr><th>Factor</th><th>Question</th></tr>
+      <tr><td>AV — Attack Vector</td><td>Network / local / physical?</td></tr>
+      <tr><td>AC — Attack Complexity</td><td>Script-kiddie or expert?</td></tr>
+      <tr><td>AT — Requirements</td><td>Recon needed first?</td></tr>
+      <tr><td>PR — Privileges</td><td>None or admin?</td></tr>
+      <tr><td>UI — User Interaction</td><td>Must the victim click?</td></tr>
+      <tr><td>VC/VI/VA</td><td>CIA impact on vulnerable system</td></tr>
+      <tr><td>SC/SI/SA</td><td>CIA impact on other systems</td></tr></table>
+      <p><b>Worked example — CVE-2022-22592</b> (WebKit RCE): <code>CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:A/VC:N/VI:H/VA:N/SC:N/SI:N/SA:N</code> = <b>Medium 6.9</b>.</p>`},
+    {h:"Scanning Tools", html:`
+      <table class="ref"><tr><th>Tool</th><th>What it does</th></tr>
+      <tr><td><b>Greenbone</b></td><td>Vuln scanner — fingerprints port banners; reports a QoD (Quality of Detection; higher = stronger evidence)</td></tr>
+      <tr><td><b>Nmap</b></td><td>Host/service scan; <code>-A</code> aggressive; NSE <code>--script discovery</code> for deeper checks</td></tr>
+      <tr><td><b>Nikto</b></td><td>Web app / OWASP checks — finds e.g. browsable directories</td></tr>
+      <tr><td><b>wafw00f</b></td><td>Detects a Web Application Firewall (can send probing packets — use carefully)</td></tr></table>`},
+  ],
+  keyTerms:[
+    {t:"CVE", d:"A catalogued real-world vulnerability instance (NIST NVD)."},
+    {t:"CWE", d:"The general weakness class a CVE exemplifies."},
+    {t:"CPE", d:"Standard naming for affected hardware/software."},
+    {t:"CVSS", d:"0–10 severity score built from vector/complexity/privileges/interaction/impact."},
+    {t:"QoD", d:"Greenbone's Quality-of-Detection confidence for a finding."},
+    {t:"NSE", d:"Nmap Scripting Engine — extends nmap (e.g. 'discovery')."},
+  ],
+  slideQuiz:[
+    {q:"What is the difference between a CVE and a CWE?", opts:["CVE is the weakness class; CWE is the instance","CVE is a specific real-world instance; CWE is the general weakness class","They are the same","CWE is a severity score"], a:1, ex:"CVE = specific instance (NVD); CWE = general weakness class it belongs to."},
+    {q:"What does CPE stand for and do?", opts:["Common Platform Enumeration — names affected HW/SW","Cyber Protection Engine — a scanner","Critical Patch Estimate — a metric","Central Policy Enforcement — a firewall"], a:0, ex:"CPE names the affected hardware/software, e.g. cpe:2.3:o:apple:iphone_os:16.2."},
+    {q:"In a CPE string, what does the part letter 'o' indicate?", opts:["Online","Operating system","Optional","Other"], a:1, ex:"Part: a = application, o = operating system, h = hardware."},
+    {q:"What is the CVSS score range?", opts:["1 to 5","0 to 10","0 to 100","-10 to +10"], a:1, ex:"CVSS runs from 0 (low) to 10 (severe)."},
+    {q:"Which CVSS factor asks whether the victim must click/interact?", opts:["AV — Attack Vector","PR — Privileges Required","UI — User Interaction","AC — Attack Complexity"], a:2, ex:"UI = User Interaction."},
+    {q:"How does Greenbone identify vulnerabilities?", opts:["By reading source code","By fingerprinting network port banners","By decrypting traffic","By checking file hashes only"], a:1, ex:"Greenbone fingerprints service/port banners to identify vulns."},
+    {q:"Which tool specifically detects a Web Application Firewall?", opts:["Nikto","Nmap","wafw00f","Greenbone"], a:2, ex:"wafw00f is built for WAF fingerprinting."},
+    {q:"On Metasploitable2, which port gives an unauthenticated root shell?", opts:["21/tcp vsftpd","23/tcp telnet","1524/tcp ingreslock backdoor","80/tcp Apache"], a:2, ex:"telnet to 1524/tcp (ingreslock) drops straight into a root shell."},
+    {q:"A higher QoD in a Greenbone report means…", opts:["Higher severity","Stronger evidence the vuln is real","Longer scan","The host is patched"], a:1, ex:"QoD = Quality of Detection — confidence the finding is genuine."},
+    {q:"Which nmap flag performs aggressive OS/service/version detection?", opts:["-A","-p","-sn","-oN"], a:0, ex:"nmap -A enables aggressive detection (OS, versions, scripts, traceroute)."},
+  ],
+  labs:[
+    {h:"Recon & WAF check", items:["wafw00f www.cqu.edu.au — is CQU behind a WAF?"]},
+    {h:"Greenbone self-scan", items:["Browse https://127.0.0.1:2443","New Credential admin/admin (SSH)","Target 127.0.0.1 + task, Min QoD 1%","Which ports open? Authenticated checks? Vulns found?"]},
+    {h:"CVSS & CPE practice", items:["CVSS 4.0 calculator — base-score a real-CVE scenario","Complete a CPE for iOS 16.3 on iPhone"]},
+    {h:"Scan Greenbone with Nikto & Nmap", items:["nikto -host 192.168.56.2 -port 443","nmap -A 192.168.56.2 — how many ports?","nmap --script discovery 192.168.56.2 — what NIC type?"]},
+    {h:"Scan Ms2 with Greenbone", items:["Credential msfadmin/msfadmin ('Allow Insecure Use')","ssh -o HostKeyAlgorithms=ssh-rsa msfadmin@192.168.56.35","Target Ms2 + task, Min QoD 1%, run (~45 min), review report","Sample: Ubuntu advisory 10.0, vsFTPd 2.3.4, root shell on 1524/tcp"]},
+    {h:"Scan Ms2 with Nikto & Nmap (Kali)", items:["nikto -host 192.168.56.35 — browsable /doc/ & /icons/ (CVE-1999-0678)","nmap -A 192.168.56.35 — 21 vsftpd, 22 OpenSSH, 23 telnet","nmap --script discovery — find 1524/tcp ingreslock","telnet 192.168.56.35 1524 → whoami → root"]},
+    {h:"ATT&CK → CPE chain", items:["iPhone iOS 16.3: is it vulnerable to T1499? Trace via NVD + CAPEC-658"]},
+  ],
+  vmNote:true,
+},
+// ============================================ WEEK 6
+{
+  id:6, title:"Monitoring & Zero Trust Architecture",
+  blurb:"Sysmon detection, alert fatigue & risk, the POLICY principles, and Zero Trust vs legacy architecture. (A1 Vulns due.)",
+  readings:["Garbis & Chapman (2021) Ch.3 (skim ~pp.5-16) — historical vs Zero Trust architecture; Table 3.2 PDP/PEP policy"],
+  theory:[
+    {h:"Sysmon-based Detection", html:`
+      <pre>Get-WinEvent *Sysmon* | where message -like "*T1055*" | select -first 1 | format-list
+<span class="cmt"># Id 8  CreateRemoteThread detected — technique T1055 Process Injection</span></pre>
+      <p>Sysmon events map directly onto ATT&CK technique IDs, making tactic-hunting far more direct than raw Windows logs.</p>`},
+    {h:"Alert Fatigue & Risk", html:`
+      <ul>
+        <li><b>False positive</b> — an alert that isn't a real attack; too many cause <i>alert fatigue</i></li>
+        <li><b>False negative</b> — a real attack that goes undetected</li>
+        <li><b>Risk = Likelihood × Impact.</b> Only alert above your org's risk threshold — which is subjective (a library vs a military org rate "run Calculator as admin" differently)</li>
+      </ul>`},
+    {h:"POLICY — Security Principles", html:`
+      <table class="ref"><tr><th>Letter</th><th>Principle</th><th>Example</th></tr>
+      <tr><td>P</td><td>Privilege (least privilege)</td><td>RBAC; devs shouldn't be admins; MFA</td></tr>
+      <tr><td>O</td><td>Open design</td><td>Security not from secrecy (RSA relies on factoring, not a hidden algorithm)</td></tr>
+      <tr><td>L</td><td>Layering (defense in depth)</td><td>Fence → Guards → Encryption</td></tr>
+      <tr><td>I</td><td>Isolation</td><td>Micro-segmentation; split a database</td></tr>
+      <tr><td>C</td><td>Complete mediation</td><td>Every access checked every time</td></tr>
+      <tr><td>Y</td><td>fail safelY & securelY</td><td>Default-deny, add exceptions</td></tr>
+      <tr><td>+</td><td>Continuous monitoring</td><td>Constant detection, not point-in-time</td></tr></table>`},
+    {h:"Legacy vs Zero Trust", html:`
+      <p><b>Legacy</b> networks grant broad implicit trust once you're "inside" (e.g. everyone can reach the file server after VPN + password). This fails today — any exploited user effectively becomes a trusted insider.</p>
+      <p><b>Zero Trust</b> assumes no implicit trust: least privilege, isolation via micro-segments, complete mediation (traffic enriched with identity/context), continuous monitoring.</p>
+      <p><b>PDP</b> (Policy Decision Point) holds the policies; <b>PEP</b> (Policy Enforcement Point) is the "smart firewall" enforcing them at each resource (≈ VPN + firewall + API + policy list).</p>`},
+    {h:"Architecture Components", html:`
+      <table class="ref"><tr><th>Component</th><th>Purpose</th></tr>
+      <tr><td>IAM</td><td>Identity & Access Mgmt — identity, authentication (MFA), RBAC</td></tr>
+      <tr><td>Jump box</td><td>Hardened access point to reach high-value systems</td></tr>
+      <tr><td>PAM</td><td>Privileged Access Mgmt — password vaulting & session recording</td></tr>
+      <tr><td>NAC</td><td>Network Access Control — device certs → VLAN admission</td></tr>
+      <tr><td>IDS/IPS</td><td>Detect/prevent anomalous behaviour (often inside NGFW)</td></tr>
+      <tr><td>VPN</td><td>Remote access into the internal network</td></tr>
+      <tr><td>NGFW</td><td>Firewall + IDS/IPS + app-awareness + VPN</td></tr>
+      <tr><td>SIEM</td><td>Aggregates & correlates security logs</td></tr>
+      <tr><td>WAF</td><td>Protects web apps/APIs (SQLi, XSS)</td></tr></table>`},
+  ],
+  keyTerms:[
+    {t:"False positive / negative", d:"FP = alert with no real attack; FN = real attack missed."},
+    {t:"POLICY", d:"Privilege, Open design, Layering, Isolation, Complete mediation, fail safelY/securelY (+ monitoring)."},
+    {t:"PDP / PEP", d:"Policy Decision Point (holds rules) / Policy Enforcement Point (enforces them)."},
+    {t:"Zero Trust", d:"No implicit trust: least privilege, micro-segments, complete mediation, continuous monitoring."},
+    {t:"NGFW", d:"Next-Gen Firewall — firewall + IDS/IPS + app control + VPN."},
+  ],
+  slideQuiz:[
+    {q:"A Sysmon event Id 8 (CreateRemoteThread) maps to which ATT&CK technique?", opts:["T1566 Phishing","T1055 Process Injection","T1053 Scheduled Task","T1021 SMB"], a:1, ex:"T1055 Process Injection — e.g. Mimikatz injecting into lsass.exe."},
+    {q:"What is a 'false positive'?", opts:["A real attack that was missed","An alert that isn't actually an attack","A blocked IP","A patched vulnerability"], a:1, ex:"FP = alert with no real attack; too many cause alert fatigue."},
+    {q:"How is risk of an incident calculated?", opts:["Likelihood + Impact","Likelihood × Impact","Impact ÷ Likelihood","CVSS × 10"], a:1, ex:"Risk = Likelihood × Impact; it sets your alert threshold."},
+    {q:"In POLICY, 'fail safely and securely' is best shown by…", opts:["Default-allow, block known-bad","Default-deny, then add explicit exceptions","Disable logging","Allow all until an incident"], a:1, ex:"Default-deny (allowlist) is the safe/secure failure mode."},
+    {q:"'Open design' means security should NOT depend on…", opts:["Encryption","Secrecy of the design","Firewalls","Passwords"], a:1, ex:"Security relies on strength (e.g. RSA's factoring difficulty), not hidden design — WEP & DVD CSS failed once secrets leaked."},
+    {q:"In Zero Trust, what is a PEP?", opts:["Policy Enforcement Point — enforces decisions at the resource","Policy Estimation Process","Primary Encryption Protocol","Privileged Endpoint Proxy"], a:0, ex:"PEP enforces the PDP's policy decisions at each micro-segmented resource."},
+    {q:"Why does legacy implicit-trust architecture fail today?", opts:["Too many firewalls","Any exploited user effectively becomes a trusted insider","No IPv6 support","Too much encryption"], a:1, ex:"Broad internal trust means one exploited vuln grants wide access."},
+    {q:"A 'jump box' is best described as…", opts:["A load balancer","A hardened access point for reaching high-value systems","A backup server","A DNS resolver"], a:1, ex:"A jump box (jump host) is the hardened intermediary to sensitive systems."},
+    {q:"A WAF specifically protects web apps against…", opts:["Power loss","SQL injection & cross-site scripting (XSS)","Phishing emails","Hardware failure"], a:1, ex:"WAF defends against app/network attacks like SQLi and XSS."},
+    {q:"Which component bundles a traditional firewall + IDS/IPS + app-awareness + VPN?", opts:["SIEM","NAC","NGFW","PAM"], a:2, ex:"NGFW = Next-Generation Firewall combines all of these."},
+  ],
+  labs:[
+    {h:"Sysmon investigation", items:["Investigate a suspicious Sysmon event (T1047 WMI) with VirusTotal","Given Emotet has gained access, find the last matching Execution Sysmon event using a complex Where filter (message -like ... -or ...)"]},
+    {h:"Write a MITRE ATT&CK threat-intel report", items:["Use MITRE's template: Group Name, Associated Groups, Description, Techniques (T-codes), Software","Limit each section to your top two intelligences"]},
+    {h:"Architecture & principle exercises", items:["Match components (IAM, firewall, DNS, load balancer, jump box, PAM, NAC, IDS/IPS, VPN, NGFW, SIEM, WAF) to purpose","Zombie Risk game: map NGFW/load balancer/IDS-IPS/IAM/PAM/NAC to scenarios; assess likelihood × impact","Nightclub analogy for each POLICY principle"]},
+    {h:"Design a Zero Trust architecture on Azure (Snuber)", items:["Entra ID → authentication","Entra ID RBAC → least-privilege roles","Conditional Access → enforce policy every request","Virtual Networks + NSGs → isolation","Microsoft Sentinel → collect/monitor logs"]},
+  ],
+  vmNote:false,
+},
+];
+
+// ============================ CHECKPOINTS (every 2 weeks) ============================
+const TESTS = [
+{
+  id:1, weeks:[1,2], title:"Weeks 1–2 Checkpoint",
+  recap:[
+    "Cybersecurity spans every system component; CIA expands to CIAAAN (+Authenticity, Authorisation, Non-repudiation).",
+    "McCumber's Cube = Goals × Info States × Measures; STRIDE-LM mirrors CIAAAN from the attacker's side.",
+    "VirtualBox: NAT = internet; Internal Network = guest-to-guest; port forwarding exposes guest services to the host.",
+    "PowerShell pipes objects: Get-Member inspects them, Where-Object filters, Select-Object picks columns, the dot operator reads one property.",
+    "Networking cmdlets: Get-NetIPAddress, Get-NetAdapter, Test-NetConnection, Resolve-DnsName, Get-NetTCPConnection.",
+    "Key event IDs: Sysmon 1/3/11/22; Security 4624/4625.",
+  ],
+  questions:[
+    {q:"Which CIAAAN goal is breached when SQL injection lets a TA 'become' another user?", opts:["Confidentiality","Authorisation","Availability","Non-repudiation"], a:1, ex:"Authorisation = only doing what you're permitted; SQLi grants another user's authority."},
+    {q:"In STRIDE-LM, 'Repudiation' mirrors which goal?", opts:["Integrity","Authenticity","Non-repudiation","Confidentiality"], a:2, ex:"Repudiation ≈ denying an action — mirror of Non-repudiation."},
+    {q:"Encrypting a stored patient DB is which McCumber combination?", opts:["Availability/Transit/People","Confidentiality/Storage/Technology","Integrity/Processing/Process","Authenticity/Storage/People"], a:1, ex:"Confidentiality (goal) × Storage (state) × Technology (measure)."},
+    {q:"Which adapter type lets guests talk to each other but not the host/internet?", opts:["NAT","Bridged","Internal Network","Host-only"], a:2, ex:"Internal Network isolates guest-to-guest traffic."},
+    {q:"What does port forwarding achieve here?", opts:["Encrypts guest traffic","Reaches a guest service from the host (host:2443 → guest:443)","Assigns a static MAC","Merges two networks"], a:1, ex:"Redirects a host port to a guest IP:port."},
+    {q:"What does `ls | Get-Member` show?", opts:["File contents","Properties & methods of piped objects","Hidden files","Working directory"], a:1, ex:"Get-Member inspects the object type in the pipeline."},
+    {q:"Which operator does a wildcard text comparison?", opts:["-eq","-match","-like","-contains"], a:2, ex:"-like = wildcard; -match = regex."},
+    {q:"Modern replacement for 'ping'?", opts:["Resolve-DnsName","Get-NetAdapter","Test-NetConnection","Get-NetRoute"], a:2, ex:"Test-NetConnection (tnc)."},
+    {q:"Sysmon event Id 22 records what?", opts:["Process creation","Registry change","DNS query","File creation"], a:2, ex:"22 = DNS query."},
+    {q:"Correct filter for files ≥5 bytes?", opts:["ls | Filter Length -ge 5","ls | Where Length -ge 5","ls -Length 5","Get-Length ls -ge 5"], a:1, ex:"Where (Where-Object) + comparison operator."},
+  ],
+  labChecklist:[
+    "Import an .ova and configure NAT + Internal Network adapters",
+    "Use Get-NetIPAddress / Get-NetAdapter / Test-NetConnection / Resolve-DnsName from memory",
+    "Create a file then filter/select its attributes in one pipeline",
+    "Explain what McCumber's Cube and STRIDE-LM are each for",
+  ],
+},
+{
+  id:2, weeks:[3,4], title:"Weeks 3–4 Checkpoint",
+  recap:[
+    "Controls = requirements; Frameworks (Essential 8, CIS Controls, NIST CSF) prioritise them.",
+    "Essential 8 and CIS v8 (18 controls, first 7 map to E8); NIST CSF = Identify/Protect/Detect/Respond/Recover.",
+    "CTI chain: ATT&CK (who does what) → CAPEC (how) → CWE (the weakness).",
+    "Pyramid of Pain: detecting TTPs hurts a TA far more than blocking a hash.",
+    "Emotet spans the full lifecycle from phishing to SMB lateral movement and RSA C2.",
+    "Lab net: Kali .34, Greenbone .2, Ms2 .35, Win8 .50 on 192.168.56.0/24.",
+  ],
+  questions:[
+    {q:"Which is an Essential Eight control?", opts:["Deploy a WAF","Restrict MS Office macros","Run Nikto weekly","Use CVSS scoring"], a:1, ex:"Restrict Office macros = E8 #3."},
+    {q:"CIS Control 2 concerns:", opts:["Data Protection","Inventory & Control of Software Assets","Incident Response","Penetration Testing"], a:1, ex:"CIS 2 = software asset inventory & allowlisting."},
+    {q:"Which NIST CSF function covers 'restore from backup'?", opts:["Identify","Protect","Respond","Recover"], a:3, ex:"Recover = restoring after an incident."},
+    {q:"What does CAPEC represent?", opts:["The threat actor group","How a weakness is exploited (attack pattern)","The patch level","The CVSS score"], a:1, ex:"CAPEC = the mechanism/template for exploiting a weakness."},
+    {q:"Why is a TTP higher on the Pyramid of Pain than an IP?", opts:["Easier to detect","Costs the TA far more to change","IPs are encrypted","TTPs never log"], a:1, ex:"Pyramid ranks by attacker cost-to-change."},
+    {q:"Stealing emails from Outlook is which Emotet tactic?", opts:["Collection","Exfiltration","Discovery","C2"], a:0, ex:"Gathering local data = Collection (T1114)."},
+    {q:"Purpose of Atomic Red Team?", opts:["Encrypt logs","Benign ATT&CK-mapped attack emulation","Replace Greenbone","Manage CIS safeguards"], a:1, ex:"ART safely tests detections against ATT&CK techniques."},
+    {q:"Kali's static IP in the lab?", opts:["192.168.56.2","192.168.56.34","192.168.56.35","192.168.56.50"], a:1, ex:"Kali .34, Greenbone .2, Ms2 .35, Win8 .50."},
+    {q:"Which check reveals if Windows Firewall is enabled?", opts:["Get-FileHash firewall.exe","Get-ItemProperty on FirewallPolicy (0/1)","Get-NetRoute","Resolve-DnsName firewall.local"], a:1, ex:"EnableFirewall registry value: 0=off, 1=on."},
+  ],
+  labChecklist:[
+    "Turn on Windows Firewall, add/remove an outbound rule, verify with PowerShell",
+    "List the 8 Essential Eight controls from memory",
+    "Get Kali, Greenbone & Ms2 networked on 192.168.56.0/24, pinging Win8 both ways",
+    "Explain the ATT&CK → CAPEC → CWE chain using Emotet",
+  ],
+},
+{
+  id:3, weeks:[5,6], title:"Weeks 5–6 Checkpoint",
+  recap:[
+    "CWE = weakness class; CVE = a specific instance (NVD); CPE = naming for affected HW/SW; CVSS = 0–10 severity.",
+    "Toolkit: Greenbone (banner fingerprinting, QoD), Nmap (-A, NSE discovery), Nikto (web/OWASP), wafw00f (WAF detection).",
+    "False positives cause alert fatigue; Risk = Likelihood × Impact; the threshold is org-specific.",
+    "POLICY: Privilege, Open design, Layering, Isolation, Complete mediation, fail safelY/securelY (+ monitoring).",
+    "Zero Trust replaces implicit-trust legacy design; decisions at a PDP, enforced by PEPs.",
+    "Know the purpose of IAM, jump box, PAM, NAC, IDS/IPS, VPN, NGFW, SIEM, WAF.",
+  ],
+  questions:[
+    {q:"CVE-2020-9993 is described as an instance of a…", opts:["CPE","CWE","CVSS vector","CAPEC"], a:1, ex:"A CVE is a specific instance of an underlying CWE weakness class."},
+    {q:"Which CVSS factor captures 'must the victim click something'?", opts:["AV","UI","PR","AC"], a:1, ex:"UI = User Interaction."},
+    {q:"Which tool detects a Web Application Firewall?", opts:["Nikto","Nmap","wafw00f","Greenbone"], a:2, ex:"wafw00f fingerprints WAFs."},
+    {q:"Which Ms2 port/service gives an unauthenticated root shell?", opts:["21 vsftpd","1524 ingreslock backdoor","23 telnet","80 Apache"], a:1, ex:"1524/tcp ingreslock drops into a root shell."},
+    {q:"A higher QoD means…", opts:["Higher CVSS","Stronger evidence the vuln is real","Longer scan","Host is patched"], a:1, ex:"QoD = confidence in the finding."},
+    {q:"'Fail safely and securely' is best shown by:", opts:["Default-deny, then add exceptions","Block known-bad only","Allow all until an incident","Disable logging"], a:0, ex:"Default-deny (allowlist)."},
+    {q:"In Zero Trust, a PDP is a…", opts:["Policy Decision Point (holds rules)","Policy Deployment Package","Port Discovery Protocol","Privileged Domain Provider"], a:0, ex:"PDP decides; PEP enforces."},
+    {q:"Why does legacy implicit-trust architecture struggle today?", opts:["Too many firewalls","One exploited user becomes a trusted insider","No IPv6","Too much encryption"], a:1, ex:"Implicit internal trust means a single exploit grants broad access."},
+    {q:"Risk of an incident is:", opts:["Likelihood × Impact","Likelihood + Impact","Impact ÷ Likelihood","CVSS alone"], a:0, ex:"Risk = Likelihood × Impact."},
+    {q:"Which component is 'a hardened access point to reach high-value systems'?", opts:["NAC","Jump box","SIEM","Load balancer"], a:1, ex:"A jump box is the hardened intermediary."},
+  ],
+  labChecklist:[
+    "Run a Greenbone scan end-to-end (credential → target → task → report)",
+    "Compute a CVSS 4.0 base score from a scenario",
+    "Run nmap -A vs nmap --script discovery and explain the difference",
+    "Name the 7 POLICY principles with a control example each",
+    "Sketch legacy vs Zero Trust architecture, labelling PDP/PEP",
+  ],
+},
+];
+
+/* ================================ APP ================================ */
+const LS_KEY = "coit11241_progress_v2";
+function loadProgress(){ try{ return JSON.parse(localStorage.getItem(LS_KEY)) || {}; }catch(e){ return {}; } }
+function saveProgress(p){ try{ localStorage.setItem(LS_KEY, JSON.stringify(p)); }catch(e){} }
+let progress = loadProgress();
+
+function labKey(weekId, k){ return `w${weekId}_lab_${k}`; }
+function weekLabStat(week){
+  let total=0, done=0;
+  week.labs.forEach((g,gi)=>g.items.forEach((_,ii)=>{ total++; if(progress[labKey(week.id,gi+"_"+ii)]) done++; }));
+  return {done,total};
+}
+function overallLabStat(){
+  let d=0,t=0; WEEKS.forEach(w=>{const s=weekLabStat(w); d+=s.done; t+=s.total;}); return {done:d,total:t};
+}
+
+function renderSidebar(route){
+  const sb = document.getElementById("sidebar");
+  let h = `<div class="brand"><div class="logo">🛡️</div><div><h1>COIT11241</h1><div class="tag">Cybersecurity Study Hub</div></div></div>`;
+  h += `<div class="side-meta">Weeks 1–6 · HT2 2026</div>`;
+  h += `<button class="nav-btn ${route==='overview'?'active':''}" onclick="go('overview')"><span class="ic">🏠</span><span class="lbl">Overview</span></button>`;
+  h += `<div class="nav-label">Weekly content</div>`;
+  WEEKS.forEach(w=>{
+    const s = weekLabStat(w);
+    h += `<button class="nav-btn ${route==='week-'+w.id?'active':''}" onclick="go('week-${w.id}')">
+      <span class="ic">${w.id}</span><span class="lbl">${w.title}</span>
+      <span class="pill ${s.done===s.total&&s.total>0?'done':''}">${s.done}/${s.total}</span></button>`;
+    if(w.id%2===0){
+      const t = TESTS.find(t=>t.weeks[1]===w.id);
+      if(t){
+        const best = progress["test_"+t.id+"_best"];
+        h += `<button class="nav-btn sub ${route==='test-'+t.id?'active':''}" onclick="go('test-${t.id}')">
+          <span class="ic">✓</span><span class="lbl">${t.title}</span>
+          <span class="pill ${best===t.questions.length?'done':''}">${best!==undefined?best+'/'+t.questions.length:'test'}</span></button>`;
+      }
+    }
+  });
+  h += `<div class="nav-label">Reference</div>`;
+  h += `<button class="nav-btn ${route==='vms'?'active':''}" onclick="go('vms')"><span class="ic">🖥️</span><span class="lbl">VM Cheat Sheet</span></button>`;
+  sb.innerHTML = h;
+}
+
+function hero(eyebrow,title,sub){
+  return `<div class="hero"><div class="eyebrow">${eyebrow}</div><h2>${title}</h2><p>${sub||""}</p></div>`;
+}
+
+function ringSvg(pct){
+  const r=52, c=2*Math.PI*r, off=c*(1-pct/100);
+  return `<div class="ring"><svg width="120" height="120">
+    <circle cx="60" cy="60" r="${r}" fill="none" stroke="#eaf0e2" stroke-width="12"/>
+    <circle cx="60" cy="60" r="${r}" fill="none" stroke="#2f9e6b" stroke-width="12" stroke-linecap="round"
+      stroke-dasharray="${c}" stroke-dashoffset="${off}"/>
+  </svg><div class="val"><b>${pct}%</b><span>labs done</span></div></div>`;
+}
+
+function renderOverview(){
+  const s = overallLabStat();
+  const pct = s.total? Math.round(100*s.done/s.total):0;
+  let h = hero("COIT11241 · Cybersecurity Technologies","Your Study Hub","Theory, slide-practice quizzes and lab checklists for every week — with a comprehensive checkpoint test after each pair of weeks. Built from your unit's own handouts and lecture slides.");
+  h += `<div class="card"><h3><span class="dot"></span>Progress</h3>
+    <div class="ring-wrap">${ringSvg(pct)}
+      <div style="flex:1; min-width:220px;">
+        <p class="muted" style="margin-top:0;">${s.done} of ${s.total} lab/practical items ticked across Weeks 1–6. Quiz scores save automatically too.</p>
+        <div class="progress-bar"><div style="width:${pct}%"></div></div>
+      </div>
+    </div></div>`;
+  h += `<div class="card"><h3><span class="dot"></span>Assessment map</h3>
+    <table class="ref"><tr><th>Assessment</th><th>Weight</th><th>Due</th></tr>
+    <tr><td>A1 Attack Portfolio</td><td>50%</td><td>W4 Recon · W6 Vulns · W8 Internal · W10 Network</td></tr>
+    <tr><td>A2 Demonstration</td><td>20%</td><td>Week 11 (live = 10% bonus, capped at 100%)</td></tr>
+    <tr><td>A3 In-class Test</td><td>30%</td><td>Week 12 — need ≥10/30 to pass the unit</td></tr></table>
+    <p class="muted">Break week falls between Week 6 and Week 7.</p></div>`;
+  h += `<div class="card"><h3><span class="dot"></span>Weeks at a glance</h3><div class="week-chips">`;
+  WEEKS.forEach(w=>{ h += `<div class="wchip"><b>Week ${w.id}</b><span>${w.title}</span></div>`; });
+  h += `</div></div>`;
+  h += `<div class="card"><h3><span class="dot"></span>How each week is laid out</h3>
+    <p class="muted" style="margin-top:2px;">Every week flows the same way so nothing feels jumbled: <b>Readings → Theory → Key Terms → Slide Practice quiz → Lab checklist</b>. The Slide Practice questions are pulled straight from that week's lecture slides and handout, so answering them is a fast way to revise the slides. Checkpoint pages (after Weeks 2, 4, 6) add a recap, a bigger scored test, and a practical self-check.</p>
+    <p class="muted">To extend for Week 7+: add an object to the <code>WEEKS</code> array near the top of this file — it appears in the nav automatically.</p></div>`;
+  return h;
+}
+
+function renderWeek(w){
+  let h = hero(`Week ${w.id}`, w.title, w.blurb);
+  // Readings
+  if(w.readings && w.readings.length){
+    h += `<div class="card section"><h3><span class="dot"></span>Readings</h3><ul>${w.readings.map(r=>`<li>${r}</li>`).join("")}</ul></div>`;
+  }
+  // Theory
+  h += `<div class="sec-head"><div class="chip">📘</div><div><h3>Theory</h3><p>Core concepts for the week</p></div></div>`;
+  w.theory.forEach(sec=>{ h += `<div class="card section"><h3><span class="dot"></span>${sec.h}</h3>${sec.html}</div>`; });
+  // Key terms
+  h += `<div class="sec-head"><div class="chip">🔑</div><div><h3>Key Terms</h3><p>Quick-reference glossary</p></div></div>`;
+  h += `<div class="card"><div class="terms-grid">${w.keyTerms.map(t=>`<div class="term"><b>${t.t}</b><span>${t.d}</span></div>`).join("")}</div></div>`;
+  // VM note
+  if(w.vmNote){ h += `<div class="card section"><h3><span class="dot"></span>Lab environment</h3>${vmGridHtml()}</div>`; }
+  // Slide practice quiz
+  if(w.slideQuiz && w.slideQuiz.length){
+    h += `<div class="sec-head"><div class="chip">📝</div><div><h3>Slide Practice</h3><p>${w.slideQuiz.length} questions straight from this week's slides & handout</p></div></div>`;
+    h += `<div class="card">${quizHtml('slide'+w.id, w.slideQuiz)}</div>`;
+  }
+  // Labs
+  h += `<div class="sec-head"><div class="chip">🧪</div><div><h3>Lab / Practical</h3><p>Tutorial checklist — tick as you go</p></div></div>`;
+  h += `<div class="card">`;
+  w.labs.forEach((g,gi)=>{
+    h += `<div class="lab-group"><div class="g-title">${g.h}</div>`;
+    g.items.forEach((item,ii)=>{
+      const key = labKey(w.id, gi+"_"+ii);
+      h += `<div class="lab-step ${progress[key]?'done':''}"><input type="checkbox" id="${key}" ${progress[key]?'checked':''} onchange="toggleLab('${key}')"><label for="${key}">${item}</label></div>`;
+    });
+    h += `</div>`;
+  });
+  h += `</div>`;
+  return h;
+}
+
+function quizHtml(quizId, questions){
+  let h = `<div class="quiz" id="quiz-${quizId}">`;
+  questions.forEach((q,qi)=>{
+    h += `<div class="quiz-q" data-qi="${qi}">
+      <div class="qtext"><span class="qnum">${qi+1}</span><span>${q.q}</span></div>`;
+    q.opts.forEach((opt,oi)=>{
+      h += `<label class="qopt" data-oi="${oi}"><input type="radio" name="${quizId}_${qi}" value="${oi}"><span>${opt}</span></label>`;
+    });
+    h += `<div class="explain" id="exp-${quizId}-${qi}"><b>Why:</b> ${q.ex}</div></div>`;
+  });
+  h += `</div>
+    <div class="btn-row">
+      <button class="btn" onclick="grade('${quizId}')">Check answers</button>
+      <button class="btn secondary" onclick="resetQuiz('${quizId}')">Reset</button>
+      <span class="score-badge" id="score-${quizId}"></span>
+    </div>`;
+  return h;
+}
+
+// store question sets by quizId for grading
+function questionsForQuiz(quizId){
+  if(quizId.startsWith('slide')){ const w = WEEKS.find(w=>'slide'+w.id===quizId); return w?w.slideQuiz:[]; }
+  if(quizId.startsWith('test')){ const id=parseInt(quizId.slice(4),10); const t=TESTS.find(t=>t.id===id); return t?t.questions:[]; }
+  return [];
+}
+
+function grade(quizId){
+  const qs = questionsForQuiz(quizId);
+  const root = document.getElementById("quiz-"+quizId);
+  let score=0;
+  qs.forEach((q,qi)=>{
+    const sel = root.querySelector(`input[name="${quizId}_${qi}"]:checked`);
+    root.querySelectorAll(`.quiz-q[data-qi="${qi}"] .qopt`).forEach(l=>l.classList.remove("correct","incorrect"));
+    const correctLbl = root.querySelector(`.quiz-q[data-qi="${qi}"] .qopt[data-oi="${q.a}"]`);
+    if(correctLbl) correctLbl.classList.add("correct");
+    if(sel){
+      const ci = parseInt(sel.value,10);
+      if(ci===q.a) score++;
+      else { const wl = root.querySelector(`.quiz-q[data-qi="${qi}"] .qopt[data-oi="${ci}"]`); if(wl) wl.classList.add("incorrect"); }
+    }
+    document.getElementById(`exp-${quizId}-${qi}`).classList.add("show");
+  });
+  const badge = document.getElementById("score-"+quizId);
+  badge.textContent = `Score: ${score} / ${qs.length}`;
+  badge.classList.add("show");
+  // persist bests
+  let key = null;
+  if(quizId.startsWith('slide')) key = "slidebest_"+quizId.slice(5);
+  if(quizId.startsWith('test')) key = "test_"+quizId.slice(4)+"_best";
+  if(key){
+    if(progress[key]===undefined || score>progress[key]){ progress[key]=score; saveProgress(progress); renderSidebar(currentRoute()); }
+  }
+}
+function resetQuiz(quizId){
+  const root = document.getElementById("quiz-"+quizId);
+  root.querySelectorAll("input[type=radio]").forEach(r=>r.checked=false);
+  root.querySelectorAll(".qopt").forEach(l=>l.classList.remove("correct","incorrect"));
+  root.querySelectorAll(".explain").forEach(e=>e.classList.remove("show"));
+  const badge=document.getElementById("score-"+quizId); badge.textContent=""; badge.classList.remove("show");
+}
+
+function toggleLab(key){ progress[key]=!progress[key]; saveProgress(progress); render(); }
+
+function renderTest(t){
+  let h = hero(`Checkpoint · Weeks ${t.weeks.join(" & ")}`, t.title, "Recap the essentials, take the comprehensive test, then self-check your practical skills.");
+  h += `<div class="card section"><h3><span class="dot"></span>Recap</h3><ul>${t.recap.map(r=>`<li>${r}</li>`).join("")}</ul></div>`;
+  h += `<div class="sec-head"><div class="chip">✅</div><div><h3>Comprehensive Test</h3><p>${t.questions.length} questions across both weeks</p></div></div>`;
+  h += `<div class="card">${quizHtml('test'+t.id, t.questions)}</div>`;
+  h += `<div class="sec-head"><div class="chip">🧪</div><div><h3>Practical self-check</h3><p>Can you actually do these?</p></div></div>`;
+  h += `<div class="card">`;
+  t.labChecklist.forEach((item,ii)=>{
+    const key = `test${t.id}_lab_${ii}`;
+    h += `<div class="lab-step ${progress[key]?'done':''}"><input type="checkbox" id="${key}" ${progress[key]?'checked':''} onchange="toggleLab('${key}')"><label for="${key}">${item}</label></div>`;
+  });
+  h += `</div>`;
+  return h;
+}
+
+function renderVms(){
+  let h = hero("Reference","VM Cheat Sheet","The shared lab environment used from Week 3/4 onward — every VM lives on the 192.168.56.0/24 internal network.");
+  h += `<div class="card section"><h3><span class="dot"></span>Machines</h3>${vmGridHtml()}</div>`;
+  h += `<div class="card section"><h3><span class="dot"></span>Connectivity checks</h3>
+    <pre>Win8 PS>  tnc 192.168.56.34        <span class="cmt"># ping Kali</span>
+Win8 PS>  ping 192.168.56.2         <span class="cmt"># ping Greenbone (tnc is slow here)</span>
+Kali $    ping 192.168.56.50        <span class="cmt"># ping Win8</span>
+Greenbone $  ping 192.168.56.50     <span class="cmt"># Advanced > Support > Shell</span></pre></div>`;
+  h += `<div class="card section"><h3><span class="dot"></span>Networking convention</h3>
+    <ul><li>Adapter 1 = NAT (internet)</li><li>Adapter 2 = Internal Network, name <code>192.168.56.0/24</code> (same on every VM)</li>
+    <li>Port-forward host TCP 2443 → Greenbone 443; host TCP 35080 → Ms2 80</li></ul></div>`;
+  return h;
+}
+
+function currentRoute(){ return (location.hash||"#overview").replace("#",""); }
+function render(){
+  const route = currentRoute();
+  const content = document.getElementById("content");
+  const crumb = document.getElementById("crumb");
+  let h="";
+  if(route==="overview"){ h=renderOverview(); crumb.innerHTML="<b>Overview</b>"; }
+  else if(route==="vms"){ h=renderVms(); crumb.innerHTML="<b>VM Cheat Sheet</b>"; }
+  else if(route.startsWith("week-")){ const w=WEEKS.find(w=>w.id===+route.split("-")[1]); if(w){ h=renderWeek(w); crumb.innerHTML=`Weeks › <b>Week ${w.id}</b>`; } else { h=renderOverview(); } }
+  else if(route.startsWith("test-")){ const t=TESTS.find(t=>t.id===+route.split("-")[1]); if(t){ h=renderTest(t); crumb.innerHTML=`Checkpoints › <b>${t.title}</b>`; } else { h=renderOverview(); } }
+  else { h=renderOverview(); crumb.innerHTML="<b>Overview</b>"; }
+  h += `<footer class="note">COIT11241 Study Hub · built from your Week 1–6 unit materials · progress saved locally in this browser</footer>`;
+  content.innerHTML = h;
+  renderSidebar(route);
+  window.scrollTo(0,0);
+}
+function go(route){ location.hash = route; }
+window.addEventListener("hashchange", render);
+window.addEventListener("DOMContentLoaded", render);
+render();
+</script>
+</body>
+</html>
